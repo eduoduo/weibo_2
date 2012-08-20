@@ -1,3 +1,5 @@
+require "yaml"
+
 require "weibo_2/version"
 require "weibo_2/config"
 require "weibo_2/base"
@@ -19,18 +21,13 @@ require "weibo_2/api/v2/suggestions"
 require "weibo_2/api/v2/remind"
 require "weibo_2/strategy/auth_code"
 
-
-if defined?(Rails)
-  module WeiboOAuth2
-    class Railtie < Rails::Railtie
-      initializer "weibo_oauth2" do
-        ActiveSupport.on_load :action_controller do
-          if Object.const_defined?("Devise") && Devise.omniauth_configs[:weibo]
-            WeiboOAuth2::Config.api_key = Devise.omniauth_configs[:weibo].strategy.client_id
-            WeiboOAuth2::Config.api_secret = Devise.omniauth_configs[:weibo].strategy.client_secret
-          end
-        end
-      end
-    end
-  end
+if File.exists?('config/weibo.yml')
+  weibo_oauth = YAML.load_file('config/weibo.yml')[ENV["RAILS_ENV"] || ENV["RACK_ENV"] || "development"]
+  WeiboOAuth2::Config.api_key = weibo_oauth["api_key"]
+  WeiboOAuth2::Config.api_secret = weibo_oauth["api_secret"]
+else
+  puts "\n\n=========================================================\n\n" +
+       "  You haven't made a config/weibo.yml file.\n\n  You should.  \n\n  The weibo gem will work much better if you do\n\n" +
+       "  Please set Weibo::Config.api_key and \n  Weibo::Config.api_secret\n  somewhere in your initialization process\n\n" +
+       "=========================================================\n\n"
 end
