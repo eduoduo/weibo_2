@@ -22,7 +22,7 @@ require "weibo_2/api/v2/remind"
 require "weibo_2/strategy/auth_code"
 
 if File.exists?('config/services.yml')
-  SERVICES = YAML.load_file(Rails.root.join("config", "services.yml")).fetch(Rails.env)
+  SERVICES = YAML.load_file('config/services.yml').fetch(Rails.env)
   WeiboOAuth2::Config.api_key = SERVICES['weibo']['api_key']
   WeiboOAuth2::Config.api_secret = SERVICES['weibo']['api_secret']
 else
