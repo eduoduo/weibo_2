@@ -21,13 +21,13 @@ require "weibo_2/api/v2/suggestions"
 require "weibo_2/api/v2/remind"
 require "weibo_2/strategy/auth_code"
 
-if File.exists?('config/weibo.yml')
-  weibo_oauth = YAML.load_file('config/weibo.yml')[ENV["RAILS_ENV"] || ENV["RACK_ENV"] || "development"]
-  WeiboOAuth2::Config.api_key = weibo_oauth["api_key"]
-  WeiboOAuth2::Config.api_secret = weibo_oauth["api_secret"]
+if File.exists?('config/services.yml')
+  SERVICES = YAML.load_file(Rails.root.join("config", "services.yml")).fetch(Rails.env)
+  WeiboOAuth2::Config.api_key = SERVICES['weibo']['api_key']
+  WeiboOAuth2::Config.api_secret = SERVICES['weibo']['api_secret']
 else
   puts "\n\n=========================================================\n\n" +
-       "  You haven't made a config/weibo.yml file.\n\n  You should.  \n\n  The weibo gem will work much better if you do\n\n" +
+       "  You haven't made a config/services.yml file.\n\n  You should.  \n\n  The weibo gem will work much better if you do\n\n" +
        "  Please set Weibo::Config.api_key and \n  Weibo::Config.api_secret\n  somewhere in your initialization process\n\n" +
        "=========================================================\n\n"
 end
