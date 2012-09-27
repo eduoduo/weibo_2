@@ -25,6 +25,7 @@ if File.exists?('config/services.yml')
   SERVICES = YAML.load_file('config/services.yml').fetch(Rails.env)
   WeiboOAuth2::Config.api_key = SERVICES['weibo']['api_key']
   WeiboOAuth2::Config.api_secret = SERVICES['weibo']['api_secret']
+  WeiboOAuth2::Config.redirect_uri = SERVICES['weibo']['redirect_uri']
 else
   puts "\n\n=========================================================\n\n" +
        "  You haven't made a config/services.yml file.\n\n  You should.  \n\n  The weibo gem will work much better if you do\n\n" +
